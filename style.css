@@ -190,3 +190,19 @@ html,body{overflow-x:clip}
   .sheet{padding:14px;transform:none} .sheet::before{left:-10px} .sheet::after{right:-10px}
   .hero h1 .scribble{white-space:normal}
 }
+
+/* logo inline, banner cookie, pagini text */
+.logo-svg{display:block;width:auto}
+.logo .logo-svg{height:46px}
+.linkbtn{background:none;border:0;padding:0;font:inherit;color:inherit;cursor:pointer;text-decoration:none}
+.linkbtn:hover{text-decoration:underline}
+.cookie{position:fixed;left:16px;right:16px;bottom:16px;z-index:50;max-width:620px;margin:0 auto;background:#fff;border:2px solid var(--ink);
+  border-radius:var(--r);box-shadow:var(--shadow);padding:16px 18px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-size:15px}
+.cookie[hidden]{display:none}
+.cookie p{margin:0;flex:1 1 260px}
+.cookie div{display:flex;gap:10px}
+.cookie .btn{padding:10px 18px;font-size:15px}
+.text{max-width:46em}
+.text h1{font-size:clamp(34px,5vw,52px);margin-bottom:18px}
+.text p{margin:0 0 14px}
+@media print{.cookie{display:none!important}}

@@ -59,6 +59,37 @@
     a4.src = src;
   });
 
+  // Google Analytics 4: se incarca DOAR dupa „Accept" (consent mode v2, varianta de baza)
+  var CK = "creionas-cookie", GA = document.body.getAttribute("data-ga");
+  function cookieCiteste() { try { return localStorage.getItem(CK); } catch (e) { return null; } }
+  function cookieScrie(v) { try { localStorage.setItem(CK, v); } catch (e) {} }
+  function pornesteGA() {
+    if (!GA || window.gtag) return;
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { dataLayer.push(arguments); };
+    gtag("consent", "default", { ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied", analytics_storage: "granted" });
+    gtag("js", new Date());
+    gtag("config", GA);
+    var s = document.createElement("script"); s.async = true;
+    s.src = "https://www.googletagmanager.com/gtag/js?id=" + GA; document.head.appendChild(s);
+  }
+  function eveniment(nume, date) { if (window.gtag) gtag("event", nume, date); }
+  var banner = document.getElementById("cookie");
+  if (cookieCiteste() === "da") pornesteGA(); else if (!cookieCiteste() && banner) banner.hidden = false;
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest("[data-cookie-alege]");
+    if (a) {
+      var v = a.getAttribute("data-cookie-alege"); cookieScrie(v); banner.hidden = true;
+      if (v === "da") pornesteGA(); else if (window.gtag) location.reload();
+    }
+    if (e.target.closest("[data-cookie]") && banner) banner.hidden = false;
+    var pl = document.getElementById("plansa");
+    if (pl && e.target.closest("#printeaza, #descarca")) {
+      eveniment(e.target.closest("#printeaza") ? "printare_plansa" : "descarcare_plansa",
+        { plansa: location.pathname, nivel: (pl.src.match(/nivel-(\d)/) || [])[1] });
+    }
+  });
+
   var start = citeste() || +(document.body.getAttribute("data-nivel-implicit") || 3);
   aplica(start);
 
