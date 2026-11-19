@@ -15,7 +15,7 @@
     });
     var dl = document.getElementById("descarca");
     if (dl) {
-      dl.href = dl.getAttribute("data-base") + "nivel-" + n + ".png";
+      dl.href = dl.getAttribute("data-base") + "nivel-" + n + "-a4.png";
       dl.setAttribute("download", dl.getAttribute("data-nume") + "-nivel-" + n + ".png");
     }
   }
@@ -48,7 +48,16 @@
   });
 
   var p = document.getElementById("printeaza");
-  if (p) p.addEventListener("click", function () { window.print(); });
+  // la printare se foloseste varianta A4 (300 dpi, umple foaia); daca nu s-a incarcat, cade pe imaginea de ecran
+  var a4 = document.getElementById("plansa-a4"), ecran = document.getElementById("plansa");
+  if (p && a4 && ecran) p.addEventListener("click", function () {
+    var src = ecran.src.replace(/\.png$/, "-a4.png");
+    if (a4.src === src && a4.complete) { window.print(); return; }
+    a4.classList.remove("gata");
+    a4.onload = function () { a4.classList.add("gata"); window.print(); };
+    a4.onerror = function () { window.print(); };
+    a4.src = src;
+  });
 
   var start = citeste() || +(document.body.getAttribute("data-nivel-implicit") || 3);
   aplica(start);
