@@ -74,6 +74,11 @@
     s.src = "https://www.googletagmanager.com/gtag/js?id=" + GA; document.head.appendChild(s);
   }
   function eveniment(nume, date) { if (window.gtag) gtag("event", nume, date); }
+  // contor propriu (VPS), fara cookie si fara IP: numara toti vizitatorii, nu doar pe cei care accepta GA
+  function numara(ev, n) {
+    try { fetch("https://dashboard.3donemodels.com/creionas/c?e=" + ev + "&p=" + encodeURIComponent(location.pathname) + "&n=" + (n || ""),
+                { mode: "no-cors", keepalive: true, credentials: "omit" }).catch(function () {}); } catch (e) {}
+  }
   var banner = document.getElementById("cookie");
   if (cookieCiteste() === "da") pornesteGA(); else if (!cookieCiteste() && banner) banner.hidden = false;
   document.addEventListener("click", function (e) {
@@ -85,10 +90,13 @@
     if (e.target.closest("[data-cookie]") && banner) banner.hidden = false;
     var pl = document.getElementById("plansa");
     if (pl && e.target.closest("#printeaza, #descarca")) {
+      numara(e.target.closest("#printeaza") ? "p" : "d", (pl.src.match(/nivel-(\d)/) || [])[1]);
       eveniment(e.target.closest("#printeaza") ? "printare_plansa" : "descarcare_plansa",
         { plansa: location.pathname, nivel: (pl.src.match(/nivel-(\d)/) || [])[1] });
     }
   });
+
+  if (document.getElementById("plansa")) numara("v", "");
 
   var start = citeste() || +(document.body.getAttribute("data-nivel-implicit") || 3);
   aplica(start);
