@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 220" role="img" aria-label="Creionaș">
+  <!-- linia trasa de creion, sub nume -->
+  <path d="M55 181 C 110 205, 160 160, 215 182 S 320 204, 375 182 S 480 160, 535 182 S 590 196, 612 184"
+        fill="none" stroke="#2EC4B6" stroke-width="9" stroke-linecap="round"/>
+
+  <!-- mascota: creionul -->
+  <g transform="translate(90 105) rotate(25)" stroke="#2D2A4A" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+    <rect x="-22" y="-100" width="44" height="26" rx="10" fill="#FF8FA3"/>
+    <rect x="-22" y="-78" width="44" height="14" fill="#C9CED6"/>
+    <rect x="-22" y="-64" width="44" height="104" fill="#FFC93C"/>
+    <rect x="10" y="-62" width="10" height="100" fill="#F7B21E" stroke="none"/>
+    <polygon points="-22,40 22,40 0,84" fill="#F6D7A8"/>
+    <polygon points="-7,70 7,70 0,84" fill="#2D2A4A"/>
+    <!-- fata -->
+    <circle cx="-8" cy="-26" r="4" fill="#2D2A4A" stroke="none"/>
+    <circle cx="8" cy="-26" r="4" fill="#2D2A4A" stroke="none"/>
+    <path d="M-8 -12 Q0 -3 8 -12" fill="none"/>
+    <circle cx="-15" cy="-15" r="4" fill="#FF8FA3" stroke="none" opacity=".75"/>
+    <circle cx="15" cy="-15" r="4" fill="#FF8FA3" stroke="none" opacity=".75"/>
+  </g>
+
+  <!-- numele -->
+  <text x="150" y="142" font-family="'Baloo 2','Nunito','Arial Rounded MT Bold','Segoe UI',Arial,sans-serif"
+        font-weight="800" font-size="96" letter-spacing="-1">
+    <tspan fill="#FF6B6B">c</tspan><tspan fill="#FF9F1C">r</tspan><tspan fill="#F4B000">e</tspan><tspan fill="#2EC4B6">i</tspan><tspan fill="#3A86FF">o</tspan><tspan fill="#8338EC">n</tspan><tspan fill="#FF5DA2">a</tspan><tspan fill="#2BB673">ș</tspan>
+  </text>
+</svg>

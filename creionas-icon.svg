@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220" role="img" aria-label="Creionaș">
+  <rect width="220" height="220" rx="48" fill="#FFF3D1"/>
+  <path d="M62 190 C 92 204, 118 176, 146 188 S 178 196, 190 186"
+        fill="none" stroke="#2EC4B6" stroke-width="9" stroke-linecap="round"/>
+  <g transform="translate(118 104) rotate(25)" stroke="#2D2A4A" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+    <rect x="-22" y="-100" width="44" height="26" rx="10" fill="#FF8FA3"/>
+    <rect x="-22" y="-78" width="44" height="14" fill="#C9CED6"/>
+    <rect x="-22" y="-64" width="44" height="104" fill="#FFC93C"/>
+    <rect x="10" y="-62" width="10" height="100" fill="#F7B21E" stroke="none"/>
+    <polygon points="-22,40 22,40 0,84" fill="#F6D7A8"/>
+    <polygon points="-7,70 7,70 0,84" fill="#2D2A4A"/>
+    <circle cx="-8" cy="-26" r="4" fill="#2D2A4A" stroke="none"/>
+    <circle cx="8" cy="-26" r="4" fill="#2D2A4A" stroke="none"/>
+    <path d="M-8 -12 Q0 -3 8 -12" fill="none"/>
+    <circle cx="-15" cy="-15" r="4" fill="#FF8FA3" stroke="none" opacity=".75"/>
+    <circle cx="15" cy="-15" r="4" fill="#FF8FA3" stroke="none" opacity=".75"/>
+  </g>
+</svg>
