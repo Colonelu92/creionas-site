@@ -165,19 +165,22 @@ footer a{text-decoration:none} footer a:hover{text-decoration:underline}
 
 .print-only{display:none}
 
-/* printare: doar plansa, pe toata foaia A4 */
+/* printare: doar plansa, pe o singura foaie, oricare ar fi hartia sau marginile.
+   Zona de print e fixa pe pagina (nu curge, deci nu poate crea pagina a doua),
+   iar desenul se micsoreaza cat sa incapa impreuna cu eticheta. */
 @media print{
   @page{size:A4 portrait;margin:10mm}
-  body{background:#fff}
+  html,body{background:#fff;margin:0!important;padding:0!important;height:auto!important;min-height:0!important}
   body>*:not(main),.no-print,.side,.crumbs,.page h1,.page .sub,section{display:none!important}
-  main,.page{display:block!important;padding:0!important}
-  .print-area{display:block!important}
-  .print-area{margin:0!important;border:0!important;box-shadow:none!important;padding:0!important;background:none!important}
-  .print-area img{width:100%;height:auto;max-height:270mm;object-fit:contain}
+  main,.page{display:block!important;padding:0!important;margin:0!important;min-height:0!important}
+  .print-area{position:fixed!important;top:0;left:0;right:0;bottom:0;display:flex!important;flex-direction:column;align-items:center;justify-content:center;
+    margin:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;padding:0!important;background:none!important;transform:none!important;overflow:hidden}
+  .print-area .stage{display:contents!important}
+  .print-area img{flex:1 1 0;min-height:0;width:100%!important;height:auto;max-width:100%;object-fit:contain}
   .print-area:has(#plansa-a4.gata) .stage{display:none!important}
-  #plansa-a4.gata{display:block!important;width:auto;height:270mm;max-width:100%;margin:0 auto}
+  #plansa-a4.gata{display:block!important}
   .print-area::before{display:none!important}
-  .print-area::after{content:"creionas.ro";display:block;position:static;transform:none;width:auto;height:auto;background:none;text-align:center;font:9px var(--font-b);color:#aaa;margin-top:1mm}
+  .print-area::after{content:"creionas.ro";display:block;flex:none;position:static;transform:none;width:auto;height:auto;background:none;text-align:center;font:9px/1.2 var(--font-b);color:#aaa;margin-top:1mm}
 }
 
 /* fara scroll orizontal pe telefon: coloanele grilei pot scadea sub latimea continutului */
