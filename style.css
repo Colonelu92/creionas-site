@@ -208,6 +208,8 @@ html,body{overflow-x:clip}
 .text{max-width:46em}
 .text h1{font-size:clamp(34px,5vw,52px);margin-bottom:18px}
 .text p{margin:0 0 14px}
+.text ul{margin:0 0 14px;padding-left:1.3em;list-style:disc}
+.text li{margin:0 0 6px}
 @media print{.cookie{display:none!important}}
 
 /* planșă din poză (draft) */
