@@ -209,3 +209,14 @@ html,body{overflow-x:clip}
 .text h1{font-size:clamp(34px,5vw,52px);margin-bottom:18px}
 .text p{margin:0 0 14px}
 @media print{.cookie{display:none!important}}
+
+/* planșă din poză (draft) */
+.pz-alege{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0 6px}
+.pz-camera{display:none}
+@media (pointer:coarse){.pz-camera{display:inline-flex}}
+.pz-mic{font-size:14px;opacity:.75}
+.pz-canvas{display:block;max-width:100%;max-height:70dvh;border:3px solid var(--ink);border-radius:16px;touch-action:none;cursor:crosshair;background:#fff}
+.pz-stare{font-weight:800;min-height:1.5em}
+.pz-rez{display:block;max-width:100%;max-height:80dvh;background:#fff;border:3px solid var(--ink);border-radius:16px}
+.pz-butoane{display:flex;flex-wrap:wrap;gap:12px}
+@media print{body:has(#din-poza) *{visibility:hidden}body:has(#din-poza) #pz-rez{visibility:visible;position:fixed;inset:0;margin:auto;max-height:100%;border:0;border-radius:0}}
