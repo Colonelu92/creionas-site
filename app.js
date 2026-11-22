@@ -15,7 +15,7 @@
     });
     var dl = document.getElementById("descarca");
     if (dl) {
-      dl.href = dl.getAttribute("data-base") + "nivel-" + n + "-a4.png";
+      dl.href = dl.getAttribute("data-base") + "nivel-" + n + ".png";
       dl.setAttribute("download", dl.getAttribute("data-nume") + "-nivel-" + n + ".png");
     }
   }
@@ -47,16 +47,80 @@
     if (b.hasAttribute("data-mergi")) { var t = document.getElementById("teme"); if (t) t.scrollIntoView({ behavior: "smooth" }); }
   });
 
+  // Varianta A4 (300 dpi, umple foaia) se face in browser din imaginea de ecran: decupare pe contur, marire,
+  // netezire si prag (aceeasi reteta ca vechiul export din construieste_site.py). Fara fisiere -a4.png pe server.
+  var A4W = 2244, A4H = 3272, cacheA4 = {};
+  function faA4(src, cb) {
+    if (cacheA4[src]) return cb(cacheA4[src]);
+    var im = new Image();
+    im.onload = function () {
+      try {
+        var w = im.naturalWidth, h = im.naturalHeight, c = document.createElement("canvas");
+        c.width = w; c.height = h; var x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, w, h); x.drawImage(im, 0, 0);
+        var d = x.getImageData(0, 0, w, h).data, x0 = w, y0 = h, x1 = -1, y1 = -1;
+        for (var y = 0; y < h; y++) for (var i = 0; i < w; i++) if (d[(y * w + i) * 4] <= 200) {
+          if (i < x0) x0 = i; if (i > x1) x1 = i; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+        if (x1 < 0) { x0 = 0; y0 = 0; x1 = w - 1; y1 = h - 1; }
+        var cw = x1 - x0 + 1, ch = y1 - y0 + 1, f = Math.min(A4W * 0.94 / cw, A4H * 0.94 / ch);
+        var dw = Math.round(cw * f), dh = Math.round(ch * f);
+        var o = document.createElement("canvas"); o.width = A4W; o.height = A4H;
+        var ox = o.getContext("2d"); ox.fillStyle = "#fff"; ox.fillRect(0, 0, A4W, A4H);
+        ox.imageSmoothingEnabled = true; ox.imageSmoothingQuality = "high";
+        if ("filter" in ox) ox.filter = "blur(" + (f * 0.55).toFixed(2) + "px)";
+        ox.drawImage(c, x0, y0, cw, ch, Math.round((A4W - dw) / 2), Math.round((A4H - dh) / 2), dw, dh);
+        ox.filter = "none";
+        var px = ox.getImageData(0, 0, A4W, A4H), p2 = px.data;
+        for (var k = 0; k < p2.length; k += 4) {
+          var v = p2[k], g = v < 110 ? 0 : v > 170 ? 255 : (v - 110) * 4.25;
+          p2[k] = p2[k + 1] = p2[k + 2] = g; p2[k + 3] = 255;
+        }
+        ox.putImageData(px, 0, 0);
+        o.toBlob(function (b) { if (!b) return cb(null); cacheA4[src] = URL.createObjectURL(b); cb(cacheA4[src]); }, "image/png");
+      } catch (e) { cb(null); }
+    };
+    im.onerror = function () { cb(null); };
+    im.src = src;
+  }
+
   var p = document.getElementById("printeaza");
-  // la printare se foloseste varianta A4 (300 dpi, umple foaia); daca nu s-a incarcat, cade pe imaginea de ecran
   var a4 = document.getElementById("plansa-a4"), ecran = document.getElementById("plansa");
   if (p && a4 && ecran) p.addEventListener("click", function () {
-    var src = ecran.src.replace(/\.png$/, "-a4.png");
-    if (a4.src === src && a4.complete) { window.print(); return; }
-    a4.classList.remove("gata");
-    a4.onload = function () { a4.classList.add("gata"); window.print(); };
-    a4.onerror = function () { window.print(); };
-    a4.src = src;
+    p.disabled = true;
+    faA4(ecran.src, function (u) {
+      p.disabled = false;
+      if (!u) { window.print(); return; }
+      if (a4.src === u && a4.complete) { window.print(); return; }
+      a4.classList.remove("gata");
+      a4.onload = function () { a4.classList.add("gata"); window.print(); };
+      a4.onerror = function () { window.print(); };
+      a4.src = u;
+    });
+  });
+  var dl = document.getElementById("descarca");
+  if (dl && ecran) dl.addEventListener("click", function (ev) {
+    if (dl.hasAttribute("data-gata")) { dl.removeAttribute("data-gata"); return; }   // al doilea click = descarcarea propriu-zisa
+    ev.preventDefault();
+    var nume = dl.getAttribute("download");
+    faA4(ecran.src, function (u) {
+      if (u) dl.href = u;                 // daca A4 nu se poate face, se descarca imaginea de ecran
+      dl.setAttribute("download", nume);
+      dl.setAttribute("data-gata", ""); dl.click();
+      setTimeout(function () { dl.href = ecran.src; }, 1000);
+    });
+  });
+
+  // variante pe pagina planșei: schimba desenul principal (nivelul ramane)
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-varianta]");
+    if (!b || !ecran) return;
+    var base = b.getAttribute("data-varianta");
+    ecran.setAttribute("data-base", base);
+    if (dl) dl.setAttribute("data-base", base);
+    document.querySelectorAll("[data-varianta]").forEach(function (x) { x.setAttribute("aria-pressed", String(x === b)); });
+    var k = (base.match(/\/v(\d+)\/$/) || [, 1])[1];
+    if (dl) dl.setAttribute("data-nume", dl.getAttribute("data-nume").replace(/-v\d+$/, "") + (k > 1 ? "-v" + k : ""));
+    aplica(citeste() || 3);
+    ecran.scrollIntoView({ behavior: "smooth", block: "center" });
   });
 
   // Google Analytics 4: se incarca DOAR dupa „Accept" (consent mode v2, varianta de baza)
@@ -89,7 +153,7 @@
     }
     if (e.target.closest("[data-cookie]") && banner) banner.hidden = false;
     var pl = document.getElementById("plansa");
-    if (pl && e.target.closest("#printeaza, #descarca")) {
+    if (pl && e.isTrusted && e.target.closest("#printeaza, #descarca")) {
       numara(e.target.closest("#printeaza") ? "p" : "d", (pl.src.match(/nivel-(\d)/) || [])[1]);
       eveniment(e.target.closest("#printeaza") ? "printare_plansa" : "descarcare_plansa",
         { plansa: location.pathname, nivel: (pl.src.match(/nivel-(\d)/) || [])[1] });
